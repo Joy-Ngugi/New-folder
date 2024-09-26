@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Events</title>
+    <link href="events.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Event Management</h1>
+    <table id="upcomingEventsTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Location</th>
+          <th>Attendees</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+      <!--<tfoot></tfoot>-->
+    </table>
+    <!-- <div>
+        <label for="eventTitle">Event Title:</label>
+        <input type="text" id="eventTitle" placeholder="Event Title">
+        <br><br>
+        <label for="attendeeName">Attendee Name:</label>
+        <input type="text" id="attendeeName" placeholder="Attendee Name">
+        <br><br>
+        <button onclick="addAttendee(eventTitle, attendee)">Add Attendee</button>
+        <button onclick="findMostAttendedEvent()">Find Event with Most Attendees</button>
+        <button onclick="deleteEvent(Wedding)">Delete Event</button>
+    </div>
+     -->
+     <script>
+       const events = [
+         {
+           title: "Wedding",
+           date: new Date("2024-09-28T11:29:10.642Z"),
+           location: "Moi Avenue",
+           attendees: new Set(["Alice", "Joy"]),
+         },
+         {
+           title: "Authorisation",
+           date: new Date("2024-09-28T11:29:10.642Z"),
+           location: "Archives",
+           attendees: new Set(["students"]),
+         },
+         {
+           title: "Graduation",
+           date: new Date("2024-09-29T11:29:10.642Z"),
+           location: "Afya Center",
+           attendees: new Set(["all leaders", "chair ladies"]),
+         },
+         {
+           title: "Christmas",
+           date: new Date("2024-09-30T11:29:10.642Z"),
+           location: "Tomboya",
+           attendees: new Set(["parents", "guardians", "elders"]),
+         },
+       ];
+       function populateEvents() {
+         const eventsTableBody = document.querySelector(" tbody");
+         eventsTableBody.innerHTML = ""; // Clear previous table rows
+         events.forEach(({ title, date, location, attendees }) => {
+           const row = document.createElement("tr");
+           row.innerHTML = `
+           <td>${title}</td>
+           <td>${date.toLocaleDateString("en-US")}</td>
+           <td>${location}</td>
+           <td>${Array.from(attendees).join(", ")}</td>
+         `;
+           eventsTableBody.appendChild(row);
+         });
+         console.log(events);
+       }
+       window.onload = populateEvents; // Call the function when the page loads
+
+        const now = new Date();
+        const upcomingEvents = events.filter((event) => {
+          const diffTime = event.date - now;
+          const diffDays = diffTime / (1000 * 60 * 60 * 24);
+          return diffDays <= 7 && diffDays >= 0;
+        });
+
+        const eventDetails = events.map((event) => {
+        return {
+             title: event.title,
+             date: event.date.toString(),
+             location: event.location,
+         };
+     });
+      console.log(eventDetails);
+
+       function addAttendee(eventTitle, attendee) {
+   const event = events.find((e) => e.title === eventTitle);
+     if (event) {
+         event.Attendees.add(attendee);
+         console.log(`${attendee} added to ${eventTitle}`);
+     } else {
+         console.log("Event not found.");
+     }
+ }
+ addAttendee("Wedding", "George");
+
+ function toJSONWithFormattedDate(events) {
+   return JSON.stringify(events, (key, value) => {
+         if (key === "date") {
+             return { formattedDate: new Date(value).toLocaleDateString("en-US") };
+         }
+         return value;
+     });
+ }
+
+ console.log(toJSONWithFormattedDate(events));
+
+ const firstEvent = events[0];
+
+ console.log(Object.keys(firstEvent)); // Properties
+ console.log(Object.values(firstEvent)); // Values
+ console.log(Object.entries(firstEvent)); // Key-Value pairs
+
+ events.forEach((event) => {
+     console.log(
+         `Title: ${event.title}, Date: ${event.date.toLocaleDateString()}`
+     );
+ });
+
+ function deleteEvent(Wedding) {
+     const index = events.findIndex((event) => event.title === Wedding);
+     if (index !== -1) {
+         events.splice(index, 1);
+         alert(`Event Wedding has been deleted.`);
+     } else {
+         alert("Event not found.");
+     }
+ }
+
+ function findMostAttended() {
+     const eventWithMostAttendees = events.reduce((maxEvent, currentEvent) =>
+         currentEvent.Attendees.size > maxEvent.Attendees.size
+             ? currentEvent
+             : maxEvent
+     );
+     alert("Event with most attendees :${eventWithMostAttendees.title}");
+ }
+
+     </script>
+  </body>
+</html>
